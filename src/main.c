@@ -19,6 +19,9 @@ PBL_APP_INFO_SIMPLE(MY_UUID, "Ernie App", "Ernie", 2 /* App version */);
 //
 #define TESTES_KEY_CURRENT 1
 #define TESTES_KEY_PRECIPITATION 3
+
+
+#define UNIT_SYSTEM "auto"
 #define TESTES_HTTP_COOKIE 1949327671
 #define TESTES_URL "http://pebble.ernie.org/default"
 
