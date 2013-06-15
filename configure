@@ -1,0 +1,9 @@
+#!/bin/sh
+if [ -e ./waf ]
+then
+  ./waf configure
+else 
+  echo "#!/bin/sh" > ./waf
+  echo "echo" >> ./waf
+  chmod 755 ./waf
+fi
