@@ -15,6 +15,10 @@ PBL_APP_INFO_SIMPLE(MY_UUID, "Ernie App", "Ernie", 2 /* App version */);
 #define TESTES_KEY_LONGITUDE 2
 #define TESTES_KEY_UNIT_SYSTEM 3
 
+#define TESTES_VALUE_UP 1
+#define TESTES_VALUE_DOWN 2
+#define TESTES_VALUE_SELECT 3
+
 // RESPONSE (RECEIVING)
 //
 #define TESTES_KEY_CURRENT 1
@@ -39,6 +43,7 @@ void up_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
   (void)recognizer;
   (void)window;
   text_layer_set_text(&textLayer, "Up!");
+  send_button(TESTES_VALUE_UP);
 }
 
 
@@ -46,6 +51,7 @@ void down_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
   (void)recognizer;
   (void)window;
   text_layer_set_text(&textLayer, "Down!");
+  send_button(TESTES_VALUE_DOWN);
 }
 
 
@@ -53,6 +59,7 @@ void select_single_click_handler(ClickRecognizerRef recognizer, Window *window) 
   (void)recognizer;
   (void)window;
   text_layer_set_text(&textLayer, "Select!");
+  send_button(TESTES_VALUE_SELECT);
 }
 
 
@@ -174,6 +181,7 @@ void handle_init(AppContextRef ctx) {
 		.reconnect=reconnect,
 		.location=location
 	}, (void*)ctx);
+
 }
 
 
