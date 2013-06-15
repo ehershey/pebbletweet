@@ -147,7 +147,7 @@ void send_button(int which) {
 	HTTPResult result = http_out_get(TESTES_URL, TESTES_HTTP_COOKIE, &body);
 	// HTTPResult result = http_out_get("http://pwdb.kathar.in/pebble/weather3.php", TESTES_HTTP_COOKIE, &body);
 	if(result != HTTP_OK) {
-		text_layer_set_text(&textLayer, "NO HTTP_OK!");
+		text_layer_set_text(&textLayer, "NO SETUP HTTP_OK!");
 		return;
 	}
 	dict_write_int32(body, TESTES_KEY_LATITUDE, our_latitude);
@@ -155,7 +155,7 @@ void send_button(int which) {
 	dict_write_cstring(body, TESTES_KEY_UNIT_SYSTEM, UNIT_SYSTEM);
 	// Send it.
 	if(http_out_send() != HTTP_OK) {
-		text_layer_set_text(&textLayer, "NO HTTP_OK!");
+		text_layer_set_text(&textLayer, "NO SENT HTTP_OK!");
 		return;
 	}
 }
