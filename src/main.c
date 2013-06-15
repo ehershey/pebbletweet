@@ -8,7 +8,8 @@
 // from http://kathar.in/httpebble/
 
 #define MY_UUID { 0x91, 0x41, 0xB6, 0x28, 0xBC, 0x89, 0x49, 0x8E, 0xB1, 0x47, 0x04, 0x9F, 0x49, 0xC0, 0x99, 0xAD }
-PBL_APP_INFO_SIMPLE(MY_UUID, "Ernie App", "Ernie", 2 /* App version */);
+#define VERSION 3
+PBL_APP_INFO_SIMPLE(MY_UUID, "Ernie App", "Ernie", VERSION /* App version */);
 
 // POST (SENDING)
 #define TESTES_KEY_LATITUDE 1
@@ -169,7 +170,7 @@ void handle_init(AppContextRef ctx) {
   window_stack_push(&window, true /* Animated */);
 
   text_layer_init(&textLayer, window.layer.frame);
-  text_layer_set_text(&textLayer, "Ernie Hello World");
+  text_layer_set_text(&textLayer, "Ernie Hello World 2");
   text_layer_set_font(&textLayer, fonts_get_system_font(FONT_KEY_GOTHAM_30_BLACK));
   layer_add_child(&window.layer, &textLayer.layer);
 
