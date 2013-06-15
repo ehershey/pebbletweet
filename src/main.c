@@ -27,6 +27,9 @@ Window window;
 TextLayer textLayer;
 
 
+static int our_latitude, our_longitude;
+static bool located;
+
 // Modify these common button handlers
 
 void up_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
@@ -119,9 +122,9 @@ void reconnect(void* context) {
 void location(float latitude, float longitude, float altitude, float accuracy, void* context) {
 	text_layer_set_text(&textLayer, "LOCATION");
 	// Fix the floats
-	// our_latitude = latitude * 10000;
-	// our_longitude = longitude * 10000;
-	// located = true;
+	 our_latitude = latitude * 10000;
+	 our_longitude = longitude * 10000;
+	 located = true;
 	// request_weather();
 	// set_timer((AppContextRef)context);
 }
