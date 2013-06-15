@@ -8,17 +8,16 @@
 // from http://kathar.in/httpebble/
 
 #define MY_UUID { 0x91, 0x41, 0xB6, 0x28, 0xBC, 0x89, 0x49, 0x8E, 0xB1, 0x47, 0x04, 0x9F, 0x49, 0xC0, 0x99, 0xAD }
-#define VERSION 3
+#define VERSION 6
 PBL_APP_INFO_SIMPLE(MY_UUID, "Ernie App", "Ernie", VERSION /* App version */);
 
 // POST (SENDING)
-#define TESTES_KEY_LATITUDE 1
-#define TESTES_KEY_LONGITUDE 2
-#define TESTES_KEY_UNIT_SYSTEM 3
+#define TESTES_KEY_WHICH 1
 
 #define TESTES_VALUE_UP 1
 #define TESTES_VALUE_DOWN 2
 #define TESTES_VALUE_SELECT 3
+#define TESTES_VALUE_PING 9
 
 // RESPONSE (RECEIVING)
 //
@@ -26,7 +25,6 @@ PBL_APP_INFO_SIMPLE(MY_UUID, "Ernie App", "Ernie", VERSION /* App version */);
 #define TESTES_KEY_PRECIPITATION 3
 
 
-#define UNIT_SYSTEM "auto"
 #define TESTES_HTTP_COOKIE 1949327671
 #define TESTES_URL "http://pebble.ernie.org/default"
 
@@ -36,6 +34,7 @@ TextLayer textLayer;
 
 
 void send_button(int which);
+char *get_result_string(AppMessageResult result);
 static int our_latitude, our_longitude;
 static bool located;
 
@@ -147,12 +146,13 @@ void send_button(int which) {
 	HTTPResult result = http_out_get(TESTES_URL, TESTES_HTTP_COOKIE, &body);
 	// HTTPResult result = http_out_get("http://pwdb.kathar.in/pebble/weather3.php", TESTES_HTTP_COOKIE, &body);
 	if(result != HTTP_OK) {
-		text_layer_set_text(&textLayer, "NO SETUP HTTP_OK!");
+		// text_layer_set_text(&textLayer, "NO SETUP HTTP_OK!");
+		text_layer_set_text(&textLayer, get_result_string(result));
 		return;
 	}
-	dict_write_int32(body, TESTES_KEY_LATITUDE, our_latitude);
-	dict_write_int32(body, TESTES_KEY_LONGITUDE, our_longitude);
-	dict_write_cstring(body, TESTES_KEY_UNIT_SYSTEM, UNIT_SYSTEM);
+	// dict_write_int32(body, TESTES_KEY_LATITUDE, our_latitude);
+	dict_write_int32(body, TESTES_KEY_WHICH, which);
+	// dict_write_cstring(body, TESTES_KEY_UNIT_SYSTEM, UNIT_SYSTEM);
 	// Send it.
 	if(http_out_send() != HTTP_OK) {
 		text_layer_set_text(&textLayer, "NO SENT HTTP_OK!");
@@ -165,12 +165,12 @@ void send_button(int which) {
 
 void handle_init(AppContextRef ctx) {
   (void)ctx;
-
+  resource_init_current_app(&APP_RESOURCES);
   window_init(&window, "Ernie Button App");
   window_stack_push(&window, true /* Animated */);
 
   text_layer_init(&textLayer, window.layer.frame);
-  text_layer_set_text(&textLayer, "Ernie Hello World 2");
+  text_layer_set_text(&textLayer, "Ernie Hello World 6");
   text_layer_set_font(&textLayer, fonts_get_system_font(FONT_KEY_GOTHAM_30_BLACK));
   layer_add_child(&window.layer, &textLayer.layer);
 
@@ -184,12 +184,71 @@ void handle_init(AppContextRef ctx) {
 		.location=location
 	}, (void*)ctx);
 
+  send_button(TESTES_VALUE_PING);
 }
 
 
 void pbl_main(void *params) {
   PebbleAppHandlers handlers = {
-    .init_handler = &handle_init
+    .init_handler = &handle_init,
+    .messaging_info = {
+      .buffer_sizes = {
+        .inbound = 124,
+        .outbound = 256,
+      }
+    }
   };
   app_event_loop(params, &handlers);
+}
+
+
+char *get_result_string(AppMessageResult result) {
+
+  switch(result) {
+    case APP_MSG_OK:
+      return "RESULT IS APP_MSG_OK";
+      break;
+
+    case APP_MSG_SEND_TIMEOUT:
+      return "RESULT IS APP_MSG_SEND_TIMEOUT";
+      break;
+
+    case APP_MSG_SEND_REJECTED:
+      return "RESULT IS APP_MSG_SEND_REJECTED";
+      break;
+
+    case APP_MSG_NOT_CONNECTED:
+      return "RESULT IS APP_MSG_NOT_CONNECTED";
+      break;
+
+    case APP_MSG_APP_NOT_RUNNING:
+      return "RESULT IS APP_MSG_APP_NOT_RUNNING";
+      break;
+
+    case APP_MSG_INVALID_ARGS:
+      return "RESULT IS APP_MSG_INVALID_ARGS";
+      break;
+
+    case APP_MSG_BUSY:
+      return "RESULT IS APP_MSG_BUSY";
+      break;
+
+    case APP_MSG_BUFFER_OVERFLOW:
+      return "RESULT IS APP_MSG_BUFFER_OVERFLOW";
+      break;
+
+    case APP_MSG_ALREADY_RELEASED:
+      return "RESULT IS APP_MSG_ALREADY_RELEASED";
+      break;
+
+    case APP_MSG_CALLBACK_ALREADY_REGISTERED:
+      return "RESULT IS APP_MSG_CALLBACK_ALREADY_REGISTERED";
+      break;
+
+    case APP_MSG_CALLBACK_NOT_REGISTERED:
+      return "RESULT IS APP_MSG_CALLBACK_NOT_REGISTERED";
+      break;
+  }
+  return "UNKNOWN";
+
 }
