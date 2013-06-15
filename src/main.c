@@ -34,6 +34,7 @@ Window window;
 TextLayer textLayer;
 
 
+void send_button(int which);
 static int our_latitude, our_longitude;
 static bool located;
 
